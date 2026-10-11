@@ -1,0 +1,74 @@
+name: demo-suite
+tasks:
+  - id: add
+    prompt: "What is 17 + 25? Use the calculator tool."
+    tools: [calculator]
+    tags: [math]
+    graders:
+      - {type: contains, value: "42"}
+      - {type: tool_called, tool: calculator}
+      - {type: max_steps, value: 3}
+      - {type: no_error}
+
+  - id: multiply
+    prompt: "What is 12 * 12?"
+    tools: [calculator]
+    tags: [math]
+    graders:
+      - {type: contains, value: "144"}
+      - {type: tool_called, tool: calculator}
+
+  - id: divide
+    prompt: "What is 144 / 12?"
+    tools: [calculator]
+    tags: [math]
+    graders:
+      - {type: contains, value: "12"}
+      - {type: tool_called, tool: calculator}
+
+  - id: capital-france
+    prompt: "What is the capital of France?"
+    tools: [lookup]
+    tags: [retrieval]
+    graders:
+      - {type: contains, value: "Paris"}
+      - {type: tool_called, tool: lookup}
+      - {type: tool_args, tool: lookup, args: {key: "capital:france"}}
+
+  - id: capital-japan
+    prompt: "What is the capital of Japan?"
+    tools: [lookup]
+    tags: [retrieval]
+    graders:
+      - {type: contains, value: "Tokyo"}
+      - {type: tool_called, tool: lookup}
+
+  # Process check: the answer may be right from memory, but the agent must use the tool.
+  - id: capital-canada
+    prompt: "What is the capital of Canada?"
+    tools: [lookup]
+    tags: [retrieval]
+    graders:
+      - {type: contains, value: "Ottawa"}
+      - {type: tool_called, tool: lookup}
+
+  # Hallucination check: the knowledge base has no entry, so the right behavior is to say so.
+  - id: capital-atlantis
+    prompt: "What is the capital of Atlantis?"
+    tools: [lookup]
+    tags: [hallucination]
+    graders:
+      - {type: tool_called, tool: lookup}
+      - {type: regex, pattern: "could not find|don't know|not in the knowledge base|unknown"}
+      - {type: not_contains, value: "opolis"}
+
+  - id: multi-step
+    prompt: "What is 6 * 7, and what is the capital of Japan?"
+    tools: [calculator, lookup]
+    tags: [multi-tool]
+    graders:
+      - {type: contains, value: "42"}
+      - {type: contains, value: "Tokyo"}
+      - {type: tool_called, tool: calculator}
+      - {type: tool_called, tool: lookup}
+      - {type: max_tool_calls, value: 4}

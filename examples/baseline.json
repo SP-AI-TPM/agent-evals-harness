@@ -1,0 +1,29 @@
+{
+  "agent": "mock-reference",
+  "metrics": {
+    "avg_steps": 2.125,
+    "avg_tool_calls": 1.125,
+    "consistency_rate": 1.0,
+    "cost_usd": null,
+    "error_rate": 0.0,
+    "input_tokens": 122,
+    "latency_p50_s": 2.009399997859873e-05,
+    "latency_p95_s": 7.761700001651661e-05,
+    "output_tokens": 49,
+    "per_task_pass_rate": {
+      "add": 1.0,
+      "capital-atlantis": 1.0,
+      "capital-canada": 1.0,
+      "capital-france": 1.0,
+      "capital-japan": 1.0,
+      "divide": 1.0,
+      "multi-step": 1.0,
+      "multiply": 1.0
+    },
+    "task_success_rate": 1.0,
+    "tasks": 8,
+    "tool_call_accuracy": 1.0,
+    "trials": 8
+  },
+  "suite": "demo-suite"
+}
