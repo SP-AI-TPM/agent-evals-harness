@@ -7,7 +7,7 @@ name = "agent-evals-harness"
 version = "0.1.0"
 description = "A small, readable eval harness for tool-using LLM agents: trajectory grading, metrics, and CI regression gates."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = { text = "MIT" }
 dependencies = ["pyyaml>=6"]
 

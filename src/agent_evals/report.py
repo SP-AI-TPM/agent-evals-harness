@@ -12,6 +12,8 @@ def _pct(v: float | None) -> str:
 
 
 def render_report(suite_name: str, agent_label: str, results: list[TrialResult], metrics: dict[str, Any]) -> str:
+    cost_value = metrics["cost_usd"]
+    cost = "n/a (no prices given)" if cost_value is None else f"{cost_value:.4f}"
     lines = [
         f"# Eval report: {suite_name}",
         "",
@@ -26,7 +28,7 @@ def render_report(suite_name: str, agent_label: str, results: list[TrialResult],
         f"| Avg steps / tool calls | {metrics['avg_steps']:.2f} / {metrics['avg_tool_calls']:.2f} |",
         f"| Tokens in / out | {metrics['input_tokens']} / {metrics['output_tokens']} |",
         f"| Latency p50 / p95 | {metrics['latency_p50_s'] * 1000:.1f} ms / {metrics['latency_p95_s'] * 1000:.1f} ms |",
-        f"| Cost (USD) | {'n/a (no prices given)' if metrics['cost_usd'] is None else f'{metrics['cost_usd']:.4f}'} |",
+        f"| Cost (USD) | {cost} |",
         "",
         "## Per-task pass rate",
         "",
