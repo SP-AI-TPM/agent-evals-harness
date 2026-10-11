@@ -7,3 +7,5 @@ results.json
 flawed.json
 candidate.json
 report.md
+.env.*
+!.env.example

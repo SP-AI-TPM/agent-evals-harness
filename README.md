@@ -1,5 +1,7 @@
 # agent-evals-harness
 
+[![ci](https://github.com/SP-AI-TPM/agent-evals-harness/actions/workflows/ci.yml/badge.svg)](https://github.com/SP-AI-TPM/agent-evals-harness/actions/workflows/ci.yml)
+
 A small, readable eval harness for **tool-using LLM agents**. It grades the whole trajectory (which tools the agent called, with what arguments, in how many steps), not just the final answer, then rolls results into launch-review metrics and a **CI regression gate**.
 
 Built by a hands-on AI Technical Program Manager. The premise: an eval suite is a launch criterion, so it should be versioned, reviewable, and able to block a release.
@@ -63,16 +65,25 @@ GATE FAILED
 
 ```bash
 pip install -e ".[claude]"
-export ANTHROPIC_API_KEY=...          # never commit this
+export ANTHROPIC_API_KEY=...          # your own key; never commit this
 agent-evals run --suite suites/demo_suite.yaml --agent claude \
   --model <model-id> --trials 5 \
   --price-in <usd-per-mtok> --price-out <usd-per-mtok> \
   --out results.json --report report.md
 ```
 
+Prefer a file? Copy `.env.example` to `.env`, put your key there, and load it with `set -a; source .env; set +a`. `.env` and `.env.*` are git-ignored; only the blank `.env.example` template is committed.
+
 Use the model ID and prices from Anthropic's current documentation. They change over time, so check them rather than copying values from anywhere else.
 
 `ClaudeAgent` implements the standard Messages API tool-use loop (send tools, execute `tool_use` blocks, return `tool_result` blocks, stop on a non-tool stop reason). Its loop logic is covered by tests that use a fake client. **It has not been run against the live API as part of this repo's test suite**, so run it once with your own key and read the first report before trusting it.
+
+## API keys and security
+
+- **Bring your own key.** This repo contains no API keys. The harness reads `ANTHROPIC_API_KEY` only from your environment, so each person who runs it uses their own key.
+- **Keep keys out of the repo.** Never put a key in code, suites, reports, issues, or screenshots. The offline mock agents and the CI pipeline need no key at all.
+- **If a key leaks, revoke it** in the Anthropic Console right away. Deleting the commit is not enough, because git history and forks keep it.
+- Setting a spend limit in the Anthropic Console caps the damage if a key is ever misused.
 
 ## Writing a suite
 
@@ -121,6 +132,10 @@ suites/            example task suites
 tests/             36 tests (graders, tools, runner/metrics, Claude loop with fake client, gate + CLI)
 examples/          baseline.json and sample reports
 ```
+
+## How this was built
+
+I built this with AI pair programming (vibe coding) using Claude Code. I set the goals, scope, and design decisions (trajectory-level grading, the CI gate, honest limitations), directed the implementation, and reviewed and tested the output. Claude wrote most of the code under that direction. All 36 tests and the CI pipeline run on every push.
 
 ## License
 
